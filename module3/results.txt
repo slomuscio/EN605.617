@@ -1,0 +1,20 @@
+Results Table
+
+|   Elements | CPU No Branch (ms) | CPU Branch (ms) | GPU No Branch (ms) | GPU Branch (ms) |
+| ---------: | -----------------: | --------------: | -----------------: | --------------: |
+|     65,536 |             0.3118 |          0.2113 |             0.1475 |          0.0164 |
+|    262,144 |             1.2721 |          0.8498 |             0.0589 |          0.0165 |
+|  1,048,576 |             5.1173 |          3.4784 |             0.0858 |          0.0513 |
+|  4,194,304 |            20.2777 |         13.9399 |             0.1767 |          0.1872 |
+| 16,777,216 |            79.6755 |         55.7767 |             0.5777 |          0.7351 |
+
+
+------------------------------------------------------------------------------------------------------
+
+Comments
+
+I tested the CPU and CUDA implementations using different input sizes that ranged from 65,536 to 16,777,216 elements. The CUDA implementation was significantly faster than the CPU implementation. For example, in the test with 16,777,216 elements, the non-branching CPU implementation took about 79.68 ms, whereas the non-branching CUDA kernel took about 0.58 ms.
+
+To test out conditional branching, I made similar algorithms where even and odd threads followed different execution paths. This causes neighboring GPU threads within a warp to exeecute the different branches. At smaller input sizes, the GPU execution times were very short and the results were variable and actually seemed to show that the branching kernel ran faster. For larger input sizes, it was more clear to see the difference. At 4,194,304 elements, the branching GPU kernel was about 5.9% slower than the non-branching one. With 16,777,216 elements, the non-branching kernel took about 0.58 ms, while the branching kernel took 0.74 ms. This is an increase of about 27%.
+
+These results show that conditional branching can reduce GPU performance when the threads within the same warp follow different execution paths. The results also show that very small GPU workloads can be somwhwat tough to benchmark using individual runs because the kernel execution times are very very short.
