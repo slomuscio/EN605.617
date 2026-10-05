@@ -4,18 +4,7 @@
 
 __constant__ float constantMultiplier;
 
-// // CUDA kernel using global memory
-// __global__ void globalMemoryKernel(float *input, float *output, int N)
-// {
-//     int i = blockIdx.x * blockDim.x + threadIdx.x;  // register mem
-
-//     if (i < N)
-//     {
-//         float inputValue = input[i];
-//         float result = inputValue * constantMultiplier;
-//         output[i] = result;
-//     }
-// }
+// CUDA kernel using global memory
 __global__ void globalMemoryKernel(float *input, float *output, int N)
 {
     // Shared mem: one float per thread in the block
